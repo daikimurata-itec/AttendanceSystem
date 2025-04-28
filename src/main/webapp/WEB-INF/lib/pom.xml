@@ -1,0 +1,12 @@
+<!-- JSTL API -->
+<dependency>
+  <groupId>jakarta.servlet.jsp.jstl</groupId>
+  <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+  <version>2.0.0</version>
+</dependency>
+<!-- JSTL 実装（GlassFish 由来） -->
+<dependency>
+  <groupId>org.glassfish.web</groupId>
+  <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+  <version>2.0.0</version>
+</dependency>
