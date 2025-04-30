@@ -25,10 +25,16 @@ public class Login extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        String dbURL = "jdbc:mysql://127.0.0.1:3306/demoDB";
-        String dbUser = "root";
-        String dbPassword = "root";
+        String dbURL = "jdbc:mysql://192.168.0.154:3306/demoDB";
+        String dbUser = "remote_user";
+        String dbPassword = "password";
 
+        try {
+        	Class.forName("com.mysql.cj.jdbc.Driver");
+        }catch (ClassNotFoundException e) {
+        	throw new ServletException("JDBC Driver not found", e);
+        }
+        
         try (Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword)) {
             String sql = "SELECT * FROM employees WHERE email = ? AND password = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
