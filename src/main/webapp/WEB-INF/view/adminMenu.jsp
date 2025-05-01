@@ -16,7 +16,7 @@
     </div>
     <h2>管理者メニュー</h2>
     <form action="" method="get">
-        <button class="menu-button" formaction="${pageContext.request.contextPath}/staffRegister">スタッフ登録</button>
+        <button class="menu-button" formaction="${pageContext.request.contextPath}/staffRegist">スタッフ登録</button>
         <button class="menu-button" formaction="${pageContext.request.contextPath}/staffEditSearch">スタッフ編集</button>
         <button class="menu-button" formaction="${pageContext.request.contextPath}/staffDelete">スタッフ削除</button>
         <button class="menu-button" formaction="${pageContext.request.contextPath}/editAttendanceSearch">打刻編集</button>
