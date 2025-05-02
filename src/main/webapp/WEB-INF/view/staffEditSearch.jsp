@@ -42,9 +42,13 @@
     
     <button type="button" onclick="location.href='${pageContext.request.contextPath}/adminMenu'">HOME</button>
     
-    <form action="staffEdit.jsp" method="get" style="display:inline;">
+
+    <form action="staffEditSearch" method="get" style="display:inline;">
+
                 <input type="hidden" name="employeeId" value="${id}" />
                 <button type="submit" name="action" value = "edit">編集</button>
             </form>
 </body>
+
 </html>
+
