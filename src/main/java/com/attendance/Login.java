@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
@@ -19,7 +20,7 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }
-//TEST
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -30,11 +31,11 @@ public class Login extends HttpServlet {
         String dbPassword = "password";
 
         try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        }catch (ClassNotFoundException e) {
-        	throw new ServletException("JDBC Driver not found", e);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new ServletException("JDBC Driver not found", e);
         }
-        
+
         try (Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword)) {
             String sql = "SELECT * FROM employees WHERE email = ? AND password = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -43,7 +44,15 @@ public class Login extends HttpServlet {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
+                        int employeeId = rs.getInt("employee_id");
+                        String employeeName = rs.getString("name");
                         int roleId = rs.getInt("role_id");
+
+                        // セッションに従業員情報を保存
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("employeeId", employeeId);
+                        session.setAttribute("employeeName", employeeName);
+
                         String roleQuery = "SELECT role_key FROM roles WHERE role_id = ?";
                         try (PreparedStatement roleStmt = conn.prepareStatement(roleQuery)) {
                             roleStmt.setInt(1, roleId);
