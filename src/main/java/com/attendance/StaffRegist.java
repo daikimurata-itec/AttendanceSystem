@@ -41,16 +41,16 @@ public class StaffRegist extends HttpServlet {
             return;
         }
 
-        String dbURL = "jdbc:mysql://192.168.0.154:3306/demoDB";
-        String dbUser = "remote_user";
-        String dbPassword = "password";
+        final String DB_URL = "jdbc:mysql://192.168.0.154:3306/demoDB?serverTimezone=UTC";
+        final String DB_USER = "remote_user";
+        final String DB_PASS = "password";
 
         int generatedId = 0;
         try {
             // MySQL JDBCドライバを手動でロード
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            try (Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword)) {
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
                 String sql = "INSERT INTO employees (name, email, password) VALUES (?, ?, ?)";
                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, name);

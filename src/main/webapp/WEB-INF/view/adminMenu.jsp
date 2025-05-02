@@ -18,7 +18,7 @@
     <form action="" method="get">
         <button class="menu-button" formaction="${pageContext.request.contextPath}/staffRegist">スタッフ登録</button>
         <button class="menu-button" formaction="${pageContext.request.contextPath}/staffEditSearch">スタッフ編集</button>
-        <button class="menu-button" formaction="${pageContext.request.contextPath}/staffDelete">スタッフ削除</button>
+        <button class="menu-button" formaction="${pageContext.request.contextPath}/staffDeleteSearch">スタッフ削除</button>
         <button class="menu-button" formaction="${pageContext.request.contextPath}/editAttendanceSearch">打刻編集</button>
         <button class="menu-button" formaction="${pageContext.request.contextPath}/output">出力</button>
     </form>
