@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.attendance.dao.AttendanceDAO;
+import com.attendance.dao.EmployeeDAO;
 import com.attendance.model.AttendanceRecord;
 
 @WebServlet("/editAttendanceForm")
@@ -19,6 +20,7 @@ public class EditAttendanceForm extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private AttendanceDAO attendanceDAO = new AttendanceDAO();
+    private EmployeeDAO  employeeDAO   = new EmployeeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,30 +58,54 @@ public class EditAttendanceForm extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
+
         int recordId   = Integer.parseInt(request.getParameter("recordId"));
         int employeeId = Integer.parseInt(request.getParameter("employeeId"));
         String workDate = request.getParameter("workDate"); // yyyy-MM-dd
         String month    = request.getParameter("month");
 
-        Timestamp clockIn = Timestamp.valueOf(workDate + " " + request.getParameter("clockIn") + ":00");
-        Timestamp clockOut= Timestamp.valueOf(workDate + " " + request.getParameter("clockOut")+ ":00");
-        Time breakDuration = request.getParameter("breakDuration").isEmpty()
-            ? null
-            : Time.valueOf(request.getParameter("breakDuration") + ":00");
-
         try {
-            if (recordId == 0) {
-                attendanceDAO.insertAttendance(employeeId, workDate, clockIn, clockOut, breakDuration);
+            if ("delete".equals(action)) {
+                // 削除処理
+                if (recordId != 0) {
+                    attendanceDAO.deleteAttendance(recordId);
+                }
+                request.setAttribute("message", "打刻データを削除しました");
             } else {
-                attendanceDAO.updateAttendance(recordId, clockIn, clockOut, breakDuration);
-            }
-        } catch (Exception e) {
-            throw new ServletException("打刻更新失敗", e);
-        }
+                // 更新処理
+                Timestamp clockIn = Timestamp.valueOf(workDate + " " + request.getParameter("clockIn") + ":00");
+                Timestamp clockOut= Timestamp.valueOf(workDate + " " + request.getParameter("clockOut")+ ":00");
+                Time breakDuration = request.getParameter("breakDuration").isEmpty()
+                    ? null
+                    : Time.valueOf(request.getParameter("breakDuration") + ":00");
 
-        request.setAttribute("message", "編集を保存しました");
-        request.getRequestDispatcher("/WEB-INF/view/result.jsp")
-               .forward(request, response);
+                if (recordId == 0) {
+                    attendanceDAO.insertAttendance(employeeId, workDate, clockIn, clockOut, breakDuration);
+                } else {
+                    attendanceDAO.updateAttendance(recordId, clockIn, clockOut, breakDuration);
+                }
+
+                Attendance updatedAtt = new Attendance();
+                updatedAtt.setRecordId(recordId);
+                updatedAtt.setEmployeeId(employeeId);
+                updatedAtt.setWorkDate(Date.valueOf(workDate));
+                updatedAtt.setClockIn(clockIn);
+                updatedAtt.setClockOut(clockOut);
+                updatedAtt.setBreakDuration(breakDuration);
+
+                request.setAttribute("att", updatedAtt);
+                request.setAttribute("message", "編集を保存しました");
+            }
+
+            String employeeName = employeeDAO.findEmployeeNameById(employeeId);
+            request.setAttribute("employeeName", employeeName);
+            request.getRequestDispatcher("/WEB-INF/view/result.jsp")
+                   .forward(request, response);
+
+        } catch (Exception e) {
+            throw new ServletException("打刻データの更新・削除に失敗しました", e);
+        }
     }
 
     public static class Attendance {

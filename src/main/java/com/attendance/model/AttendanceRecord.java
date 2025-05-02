@@ -9,6 +9,8 @@ public class AttendanceRecord {
     private Date date;
     private Time clockIn;
     private Time clockOut;
+    private Time breakOut;
+    private Time breakIn;
     private Time breakDuration;
 
     // ゲッターとセッターを定義する
@@ -59,4 +61,20 @@ public class AttendanceRecord {
     public void setBreakDuration(Time breakDuration) {
         this.breakDuration = breakDuration;
     }
+
+	public Time getBreakOut() {
+		return breakOut;
+	}
+
+	public void setBreakOut(Time breakOut) {
+		this.breakOut = breakOut;
+	}
+
+	public Time getBreakIn() {
+		return breakIn;
+	}
+
+	public void setBreakIn(Time breakIn) {
+		this.breakIn = breakIn;
+	}
 }

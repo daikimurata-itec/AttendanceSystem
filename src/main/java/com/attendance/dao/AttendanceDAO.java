@@ -38,6 +38,8 @@ public class AttendanceDAO {
         record.setDate(rs.getDate("work_date"));
         record.setClockIn(rs.getTime("clock_in"));
         record.setClockOut(rs.getTime("clock_out"));
+        record.setBreakOut(rs.getTime("break_out"));
+        record.setBreakIn (rs.getTime("break_in"));
         record.setBreakDuration(rs.getTime("break_duration"));
         return record;
     }
@@ -48,7 +50,7 @@ public class AttendanceDAO {
     public List<AttendanceRecord> getRecordsByEmployeeAndMonth(int employeeId, String month) throws Exception {
         List<AttendanceRecord> records = new ArrayList<>();
         try (Connection conn = getConnection()) {
-            String sql = "SELECT record_id, work_date, clock_in, clock_out, break_duration "
+        	String sql = "SELECT record_id, work_date, clock_in, clock_out, break_out, break_in, break_duration "
                        + "FROM attendance_records "
                        + "WHERE employee_id = ? AND DATE_FORMAT(work_date, '%Y-%m') = ?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -71,7 +73,7 @@ public class AttendanceDAO {
     public AttendanceRecord getAttendanceRecordByEmployeeAndDate(int employeeId, String date) throws Exception {
         AttendanceRecord record = null;
         try (Connection conn = getConnection()) {
-            String sql = "SELECT record_id, work_date, clock_in, clock_out, break_duration "
+            String sql = "SELECT record_id, work_date, clock_in, clock_out, break_out, break_in, break_duration "
                        + "FROM attendance_records "
                        + "WHERE employee_id = ? AND work_date = ?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -125,6 +127,15 @@ public class AttendanceDAO {
                 ps.setTime(5, breakDuration);
                 ps.executeUpdate();
             }
+        }
+    }
+    
+    public void deleteAttendance(int recordId) throws Exception {
+        String sql = "DELETE FROM attendance_records WHERE record_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, recordId);
+            stmt.executeUpdate();
         }
     }
 
