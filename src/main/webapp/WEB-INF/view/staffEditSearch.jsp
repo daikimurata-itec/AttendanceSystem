@@ -19,8 +19,8 @@
 
     <c:choose>
         <c:when test="${searched == 'found'}">
-            <p>ID: <%= String.format("%04d", (Integer) request.getAttribute("id")) %></p>
-            <p>${name}</p>
+            <p>ID: <strong><%= String.format("%04d", (Integer) request.getAttribute("id")) %></strong>
+               名前: <strong>${name}</strong></p>
 
             
 

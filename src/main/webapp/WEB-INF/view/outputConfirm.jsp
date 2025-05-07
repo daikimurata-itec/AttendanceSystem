@@ -85,8 +85,8 @@
     <input type="hidden" name="employeeId" value="${employeeId}"/>
     <input type="hidden" name="month"      value="${month}"/>
     <input type="hidden" name="format"     value="${format}"/>
-    <button type="submit" name="action" value="print">出力する</button>
     <button type="submit" name="action" value="back">戻る</button>
+    <button type="submit" name="action" value="print">出力する</button>
   </form>
 </body>
 </html>

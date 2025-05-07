@@ -43,7 +43,7 @@ public class OutputServlet extends HttpServlet {
             try {
                 String name = employeeDAO.findEmployeeNameById(Integer.parseInt(id));
                 if (name == null) {
-                    req.setAttribute("errorMessage", "該当社員なし(ID=" + id + ")");
+                    req.setAttribute("errorMessage", "該当するスタッフが見つかりませんでした。");
                 } else {
                     req.setAttribute("employeeName", name);
                 }

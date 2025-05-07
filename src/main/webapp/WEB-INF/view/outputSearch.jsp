@@ -22,7 +22,7 @@
 
     <!-- 2) 検索後に表示 -->
     <c:if test="${not empty employeeName}">
-      <p>ID：<strong>${fn:escapeXml(employeeId)}</strong>
+      <p>ID:<strong> <%= String.format("%04d", Integer.parseInt((String) request.getAttribute("employeeId"))) %></strong>
          名前：<strong>${fn:escapeXml(employeeName)}</strong></p>
 
       <div>
@@ -41,11 +41,11 @@
       </div>
       <div>
         <!-- 確認画面へ -->
-        <button type="submit" name="action" value="confirm">出力確認</button>
         <button type="button"
                 onclick="location.href='${pageContext.request.contextPath}/adminMenu'">
           HOME
         </button>
+        <button type="submit" name="action" value="confirm">出力確認</button>
       </div>
     </c:if>
   </form>
