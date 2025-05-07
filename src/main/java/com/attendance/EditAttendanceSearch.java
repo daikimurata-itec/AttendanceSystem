@@ -20,39 +20,55 @@ public class EditAttendanceSearch extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // メニューから検索画面に戻ってきたときなど、常に古い検索条件をクリアする
+        // 古い検索条件をクリア
         HttpSession session = request.getSession();
         session.removeAttribute("employeeId");
         session.removeAttribute("month");
 
-        // 元のパラメータを取得（POST→GET時の転送用）
-        String id     = request.getParameter("employeeId");
-        String month  = request.getParameter("month");
-        String action = request.getParameter("action");  // "search" or "edit"
+        // パラメータ取得
+        String idParam    = request.getParameter("employeeId");
+        String monthParam = request.getParameter("month");
+        String action     = request.getParameter("action");  // "search" or "edit"
 
-        // 編集ボタン押下で一覧に飛ぶ場合は、セッションに保存してリダイレクト
+        // 編集ボタン → 一覧画面へ
         if ("edit".equals(action)) {
-            session.setAttribute("employeeId", id);
-            session.setAttribute("month", month);
+            // employeeId と month が null/空なら一覧へ戻す
+            if (idParam == null || idParam.isEmpty() ||
+                monthParam == null || monthParam.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/editAttendanceList");
+                return;
+            }
+            session.setAttribute("employeeId", idParam);
+            session.setAttribute("month", monthParam);
             response.sendRedirect(request.getContextPath()
-                    + "/editAttendanceList?employeeId=" + id
-                    + "&month=" + month);
+                    + "/editAttendanceList?employeeId=" + idParam
+                    + "&month=" + monthParam);
             return;
         }
 
-        // 検索ボタン押下 or IDが直打ちされた場合
-        if ("search".equals(action) || (id != null && !id.isEmpty())) {
-            Employee emp = employeeDAO.findById(id);
-            if (emp != null) {
-                request.setAttribute("employeeName", emp.getName());
+        // 検索ボタン押下または直接 ID 指定された場合
+        if ("search".equals(action) || (idParam != null && !idParam.isEmpty())) {
+            // ID が数値かチェック
+            if (idParam != null && idParam.matches("\\d+")) {
+                Employee emp = null;
+                try {
+                    emp = employeeDAO.findById(idParam);
+                } catch (Exception e) {
+                    throw new ServletException("スタッフ情報の取得に失敗しました", e);
+                }
+                if (emp != null) {
+                    request.setAttribute("employeeName", emp.getName());
+                } else {
+                    request.setAttribute("errorMessage", "該当するスタッフが見つかりませんでした。");
+                }
             } else {
-                request.setAttribute("errorMessage", "該当するスタッフが見つかりませんでした。");
+                request.setAttribute("errorMessage", "スタッフIDは数値で指定してください。");
             }
         }
 
-        // 入力内容をフォーム再表示用にセット
-        request.setAttribute("employeeId", id);
-        request.setAttribute("month", month);
+        // フォーム再表示用に入力値セット
+        request.setAttribute("employeeId", idParam);
+        request.setAttribute("month", monthParam);
         request.getRequestDispatcher("/WEB-INF/view/editAttendanceSearch.jsp")
                .forward(request, response);
     }
@@ -60,7 +76,6 @@ public class EditAttendanceSearch extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // POSTはGETに委譲
         doGet(req, resp);
     }
 }

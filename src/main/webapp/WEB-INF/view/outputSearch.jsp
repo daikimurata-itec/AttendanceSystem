@@ -16,14 +16,26 @@
       <button type="submit" name="action" value="search">検索</button>
     </div>
 
+    <!-- ERROR メッセージ -->
     <c:if test="${not empty errorMessage}">
       <p style="color:red">${errorMessage}</p>
     </c:if>
 
+    <!-- HOME ボタンは常に表示 -->
+    <div>
+      <button type="button"
+              onclick="location.href='${pageContext.request.contextPath}/adminMenu'">
+        HOME
+      </button>
+    </div>
+
     <!-- 2) 検索後に表示 -->
     <c:if test="${not empty employeeName}">
-      <p>ID:<strong> <%= String.format("%04d", Integer.parseInt((String) request.getAttribute("employeeId"))) %></strong>
-         名前：<strong>${fn:escapeXml(employeeName)}</strong></p>
+      <p>ID:<strong>
+          <%= String.format("%04d", Integer.parseInt((String) request.getAttribute("employeeId"))) %>
+         </strong>
+         名前：<strong>${fn:escapeXml(employeeName)}</strong>
+      </p>
 
       <div>
         <label>月 (YYYY-MM)：
@@ -40,11 +52,7 @@
         </label>
       </div>
       <div>
-        <!-- 確認画面へ -->
-        <button type="button"
-                onclick="location.href='${pageContext.request.contextPath}/adminMenu'">
-          HOME
-        </button>
+        <!-- 出力確認へ -->
         <button type="submit" name="action" value="confirm">出力確認</button>
       </div>
     </c:if>
