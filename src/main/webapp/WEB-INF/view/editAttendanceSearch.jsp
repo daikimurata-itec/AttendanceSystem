@@ -54,7 +54,7 @@
   </c:if>
 
   <!-- 検索結果表示 -->
-  <c:if test="${not empty employeeName}">
+  <c:if test="${searched and not empty employeeName}">
     <p>
       ID: <strong><fmt:formatNumber value="${employeeId}" pattern="0000" /></strong>
       名前: <strong>${fn:escapeXml(employeeName)}</strong>

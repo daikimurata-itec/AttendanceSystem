@@ -1,6 +1,7 @@
 package com.attendance;
 
 import java.io.IOException;
+import java.text.Normalizer;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,13 +27,18 @@ public class EditAttendanceSearch extends HttpServlet {
         session.removeAttribute("month");
 
         // パラメータ取得
-        String idParam    = request.getParameter("employeeId");
+        String idParamRaw = request.getParameter("employeeId");
         String monthParam = request.getParameter("month");
-        String action     = request.getParameter("action");  // "search" or "edit"
+        String action = request.getParameter("action");  // "search" or "edit"
+        
+     // IDを半角に変換（全角数字→半角数字）
+        String idParam = null;
+        if (idParamRaw != null) {
+            idParam = Normalizer.normalize(idParamRaw, Normalizer.Form.NFKC);
+        }
 
         // 編集ボタン → 一覧画面へ
         if ("edit".equals(action)) {
-            // employeeId と month が null/空なら一覧へ戻す
             if (idParam == null || idParam.isEmpty() ||
                 monthParam == null || monthParam.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/editAttendanceList");
@@ -46,8 +52,10 @@ public class EditAttendanceSearch extends HttpServlet {
             return;
         }
 
-        // 検索ボタン押下または直接 ID 指定された場合
-        if ("search".equals(action) || (idParam != null && !idParam.isEmpty())) {
+        // 検索ボタンが押された場合
+        if ("search".equals(action)) {
+            request.setAttribute("searched", true);  // 検索実行フラグを渡す
+
             // ID が数値かチェック
             if (idParam != null && idParam.matches("\\d+")) {
                 Employee emp = null;
