@@ -15,7 +15,7 @@
 <body>
   <h2>出力確認</h2>
   <p>
-    社員ID：<strong>${employeeId}</strong><br/>
+    社員ID：<strong><%= String.format("%04d", Integer.parseInt((String) request.getAttribute("employeeId"))) %></strong><br/>
     名前　：<strong>${employeeName}</strong><br/>
     月　　：<strong>${month}</strong><br/>
     フォーマット：<strong>${format}</strong>

@@ -50,8 +50,8 @@
 
     <!-- 従業員IDと名前を横並びに配置 -->
     <div class="employee-info">
-        <p>従業員ID：${employeeId}</p>
-        <p>名前：${employeeName}</p>
+        <p>従業員ID：<strong><%= String.format("%04d", (Integer) request.getAttribute("employeeId")) %></strong></p>
+        <p>名前：<strong>${employeeName}</strong></p>
 
         <!-- 戻るボタン -->
         <button type="button" class="button back-button" onclick="goBackToLogin()">戻る</button>
