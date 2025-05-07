@@ -46,7 +46,7 @@ public class EditAttendanceSearch extends HttpServlet {
             if (emp != null) {
                 request.setAttribute("employeeName", emp.getName());
             } else {
-                request.setAttribute("errorMessage", "該当する社員が見つかりません(ID=" + id + ")");
+                request.setAttribute("errorMessage", "該当するスタッフが見つかりませんでした。");
             }
         }
 

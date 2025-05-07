@@ -30,11 +30,11 @@
     </div>
     <!-- 編集と戻るボタン行 -->
     <div>
-      <button type="submit" name="action" value="edit">打刻編集</button>
       <button type="button"
         onclick="location.href='${pageContext.request.contextPath}/adminMenu'">
-        戻る
+        HOME
       </button>
+      <button type="submit" name="action" value="edit">打刻編集</button>
     </div>
   </form>
 
@@ -44,7 +44,7 @@
 
   <c:if test="${not empty employeeName}">
     <p>
-      ID: <strong>${fn:escapeXml(employeeId)}</strong><br/>
+      ID: <%= String.format("%04d", Integer.parseInt((String) request.getAttribute("employeeId"))) %>
       名前: <strong>${fn:escapeXml(employeeName)}</strong>
     </p>
   </c:if>
